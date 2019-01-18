@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "description": "API exposing Google Maps Geocoding and Open Weather API data to a simple weather app.",
   "engines": {
-    "node": "11.6.0"
+    "node": "10.15.0"
   },
   "private": true,
   "scripts": {
