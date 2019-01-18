@@ -13,9 +13,10 @@ const PORT = process.env.PORT || 5000;
 app.use(helmet());
 
 app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
-  next();
+	let origin = process.env.NODE_ENV === 'development' ? '*' : 'https://thebrengun.github.io';
+	res.header("Access-Control-Allow-Origin", origin);
+	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
+	next();
 });
 
 app.get('/api/v1/weather/current', handleWeather());
@@ -81,19 +82,29 @@ app.get('/api/v1/geocode/decode', (req, res) => {
 function handleWeather(current = true) {
 	const getWeather = current ? getCurrentWeather : getForecastWeather;
 	return (req, res) => {
-		const lat = req.query.lat;
-		const lon = req.query.lon;
+		const {lat, lon, id} = req.query;
+		const params = {};
 
-		if(typeof lat !== 'string' || typeof lon !== 'string') {
+		if(!id && lat && lon && (typeof lat !== 'string' || typeof lon !== 'string')) {
 			return res.status(400).json({
 				cod: 400,
-				message: "Expected one of each parameter 'lat' and 'lon' to be floats"
+				message: "Expected only one of each parameter 'lat' and 'lon'"
 			});
+		} else if(!id && lat && lon) {
+			params['lat'] = encodeURIComponent(lat);
+			params['lon'] = encodeURIComponent(lon);
 		}
 
-		getWeather({
-			lat: encodeURIComponent(lat), lon: encodeURIComponent(lon)
-		}).then(response => {
+		if(id && typeof id !== 'string') {
+			return res.status(400).json({
+				cod: 400,
+				message: "Expected a single id"
+			});
+		} else {
+			params['id'] = encodeURIComponent(id);
+		}
+
+		getWeather(params).then(response => {
 			res.status(response.status);
 			return response.json();
 		}).then(json => res.json(json));

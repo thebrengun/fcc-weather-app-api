@@ -6,8 +6,8 @@ This repository provides access to the [Open Weather API](https://openweathermap
 
 ### /api/v1/weather/current (GET)
 #### Parameters
-**lat=[float]&lon=[float]**
-Latitude and longitude are required and the only parameters supported at this time.
+**lat=[float]&lon=[float] id=[string]**
+Either an id or latitude and longitude are required and the only parameters supported at this time.
 
 View the Open Weather [documentation](https://openweathermap.org/current/#geo)
 
@@ -24,8 +24,8 @@ Support for language parameter should be added in the future.
 
 ### /api/v1/weather/daily (GET)
 #### Parameters
-**lat=[float]&lon=[float]**
-Latitude and longitude are required and the only parameters supported at this time. This returns an 8 day daily forecast.
+**lat=[float]&lon=[float] id=[string]**
+Either an id or latitude and longitude are required and the only parameters supported at this time. This returns an 8 day daily forecast.
 
 View the Open Weather [documentation](https://openweathermap.org/forecast16/#geo16)
 
