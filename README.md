@@ -2,6 +2,21 @@
 
 This repository provides access to the [Open Weather API](https://openweathermap.org/api) and to the [Google Maps Geocoding API](https://developers.google.com/maps/documentation/geocoding/intro). In tandem, these APIs make it possible to provide location specific weather data from Open Weather based on latitude and longitude coordinates derived from an address string provided to Google Maps Geocode by the user.
 
+## Getting Started
+You must have API keys for both Open Weather and Google Maps.
+[Open Weather Getting Started](https://openweathermap.org/appid)
+[Google Maps Geocode Getting Started](https://developers.google.com/maps/documentation/geocoding/start)
+
+The keys are accessed via environment variables. You can set up a .env.local file in the root and set keys like this:
+
+OPEN_WEATHER_KEY=YOUR_KEY_HERE
+GAPI_KEY=YOUR_KEY_HERE
+
+You can also pass in a value to set the Access-Control-Allow-Origin header by setting a key:
+ALLOW_ORIGIN=ALLOWED_ORIGIN
+
+# API
+
 ## Current Weather
 
 ### /api/v1/weather/current (GET)

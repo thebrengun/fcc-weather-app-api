@@ -2,8 +2,14 @@ import express from 'express';
 import helmet from 'helmet';
 import { getCurrentWeather, getForecastWeather } from './weather.js';
 
+const GAPI_KEY = process.env.GAPI_KEY;
+if(!GAPI_KEY) {
+	throw new Error(`Expected environment variable 'GAPI_KEY' containing key for Google Geocode API. 
+		See https://developers.google.com/maps/documentation/geocoding/start to get a key.
+	`);
+}
 const googleMapsClient = require('@google/maps').createClient({
-	key: process.env.GAPI_KEY,
+	key: GAPI_KEY,
 	Promise: Promise
 });
 
@@ -12,9 +18,10 @@ const PORT = process.env.PORT || 5000;
 
 app.use(helmet());
 
+const origin = process.env.ALLOW_ORIGIN;
+
 app.use((req, res, next) => {
-	let origin = process.env.NODE_ENV === 'development' ? '*' : 'https://thebrengun.github.io';
-	res.header("Access-Control-Allow-Origin", origin);
+	res.header("Access-Control-Allow-Origin", process.env.NODE_ENV === 'development' || !origin ? '*' : origin);
 	res.header("Access-Control-Allow-Headers", "Origin, X-Requested-With, Content-Type, Accept");
 	next();
 });
