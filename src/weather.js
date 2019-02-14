@@ -23,6 +23,13 @@ function getForecastWeather(options = defaultOptions) {
 	return fetch(request);
 }
 
+function getHourlyForecastWeather(options = defaultOptions) {
+	options = {...options, cnt: 12, APPID};
+	const base = 'https://api.openweathermap.org/data/2.5/forecast';
+	const request = formatRequest(base, options);
+	return fetch(request);
+}
+
 function formatRequest(base, options) {
 	return base + Object.keys(options).reduce(function(s, k, i) {
 		var prefix = i === 0 ? '?' : '&';
@@ -30,4 +37,4 @@ function formatRequest(base, options) {
 	}, '');
 }
 
-export { getCurrentWeather, getForecastWeather };
+export { getCurrentWeather, getForecastWeather, getHourlyForecastWeather };

@@ -1,6 +1,14 @@
 import express from 'express';
 import helmet from 'helmet';
-import { getCurrentWeather, getForecastWeather } from './weather.js';
+import { 
+	getCurrentWeather, 
+	getForecastWeather, 
+	getHourlyForecastWeather
+ } from './weather.js';
+
+const HOURLY_FORECAST = 'HOURLY_FORECAST';
+const DAILY_FORECAST = 'DAILY_FORECAST';
+const CURRENT_FORECAST = 'CURRENT_FORECAST';
 
 const GAPI_KEY = process.env.GAPI_KEY;
 if(!GAPI_KEY) {
@@ -26,8 +34,9 @@ app.use((req, res, next) => {
 	next();
 });
 
-app.get('/api/v1/weather/current', handleWeather());
-app.get('/api/v1/weather/daily', handleWeather(false));
+app.get('/api/v1/weather/current', handleWeather(CURRENT_FORECAST));
+app.get('/api/v1/weather/daily', handleWeather(DAILY_FORECAST));
+app.get('/api/v1/weather/hourly', handleWeather(HOURLY_FORECAST));
 app.get('/api/v1/geocode/encode', (req, res) => {
 	const address = req.query.address;
 	if(typeof address !== 'string') {
@@ -86,8 +95,20 @@ app.get('/api/v1/geocode/decode', (req, res) => {
 	);
 });
 
-function handleWeather(current = true) {
-	const getWeather = current ? getCurrentWeather : getForecastWeather;
+function getWeatherForecastFunc(mode) {
+	switch(mode) {
+		case DAILY_FORECAST:
+			return getForecastWeather;
+		case HOURLY_FORECAST:
+			return getHourlyForecastWeather;
+		case CURRENT_FORECAST:
+		default:
+			return getCurrentWeather;
+	}
+}
+
+function handleWeather(mode = CURRENT_FORECAST) {
+	const getWeather = getWeatherForecastFunc(mode);
 	return (req, res) => {
 		const {lat, lon, id} = req.query;
 		const params = {};
