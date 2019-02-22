@@ -54,6 +54,21 @@ View the Open Weather [documentation](https://openweathermap.org/forecast16/#geo
 
 Support for language parameter should be added in the future. Currently the forecast for 8 days is returned by default and no parameter to extend to the total possible 16 days exists. Probably this should be added.
 
+This also returns a localDt in addition to the dt. This is to provide support for local timezone information and is obtained by submitting the first dt from the Google Maps Time Zone API. Of course, if during the forecast period daylight savings time becomes in or out of effect some of the times will be 1 hour off. But this is preferable to making multiple requests to the Time Zone API for an edge case that only occurs twice a year (and only in some localities) and that ultimately is of little significance to users.
+
+## 3 Hour Forecast
+
+### /api/v1/weather/hourly (GET)
+#### Parameters
+**lat=[float]&lon=[float] id=[string]**
+Either an id or latitude and longitude are required and the only parameters supported at this time. This returns an 12 forecasts spaced out by 3 hours.
+
+View the Open Weather [documentation](https://openweathermap.org/forecast5)
+
+#### Notes
+
+Support for language parameter should be added in the future. Currently the forecast for 36 hours is returned by default and no parameter to extend to the total possible 5 days exists. Probably this should be added.
+
 ## Geocode
 
 ### /api/v1/geocode/decode (GET)
