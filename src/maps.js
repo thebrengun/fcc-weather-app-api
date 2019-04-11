@@ -18,28 +18,27 @@ function handleGeocode(req, res) {
 		});
 	}
 
-	googleMapsClient.geocode({
-		address: encodeURIComponent(address)
-	}).asPromise().then(
-		response => {
-			return response.json.results;
-		}
-	).catch(
-		err => {
-			res.status(res.statusCode || 400);
-			return err.json;
-		}
-	).then(
-		json => {
-			res.status(res.statusCode || 200);
-			res.json({cod: res.statusCode, message: json.error_message || '', ...json});
-		}
-	);
+	googleMapsClient.geocode({address: address}).asPromise()
+		.then(
+			response => {
+				return response.json.results;
+			}
+		).catch(
+			err => {
+				res.status(res.statusCode || 400);
+				return err.json;
+			}
+		).then(
+			json => {
+				res.status(res.statusCode || 200);
+				res.json({cod: res.statusCode, message: json.error_message || '', ...json});
+			}
+		);
 }
 
 function handleReverseGeocode(req, res) {
-	const lat = encodeURIComponent(req.query.lat);
-	const lon = encodeURIComponent(req.query.lon);
+	const lat = req.query.lat;
+	const lon = req.query.lon;
 
 	if(typeof lat !== 'string' || typeof lon !== 'string') {
 		return res.status(400).json({
